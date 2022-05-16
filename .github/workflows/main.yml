@@ -1,6 +1,8 @@
 name: CI
 
 on: 
+  workflow_dispatch:
+    inputs:
   push:
     branches:
       - master
@@ -11,7 +13,7 @@ on:
 jobs:
   build_native_linux:
     name: Build native on linux
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
 
     steps:
       - uses: actions/checkout@v1
@@ -49,7 +51,13 @@ jobs:
 
   build_native_windows:
     name: Build native on Windows
-    runs-on: windows-latest
+    runs-on: windows-2016
+    strategy:
+      matrix:
+        platform: ["x86", "x64"]
+    env:
+      PLATFORM: ${{ matrix.platform == 'x86' && 'Win32' || 'x64' }}
+      GENERATOR_PLATFORM: ${{ matrix.platform == 'x86' && 'Win32' || 'x64' }}
 
     steps:
       - uses: actions/checkout@v1
@@ -57,19 +65,20 @@ jobs:
           submodules: recursive
 
       - name: Setup MSBuild.exe
-        uses: warrenbuckley/Setup-MSBuild@v1
+        uses: microsoft/setup-msbuild@v1.0.3
 
       - name: Build
         run: |
+          echo "Platform $env:PLATFORM"
           mkdir build
           cd build
-          cmake ../libstbi
+          cmake -A "$env:PLATFORM" -DCMAKE_GENERATOR_PLATFORM="$env:GENERATOR_PLATFORM" ../libstbi
           msbuild /v:m /p:Configuration=Release INSTALL.vcxproj
 
       - uses: actions/upload-artifact@master
         with:
-          name: win-x64
-          path: runtimes/win-x64
+          name: win-${{ matrix.platform }}
+          path: runtimes/win-${{ matrix.platform }}
 
   build_wrapper:
     name: Build C# wrapper
@@ -88,10 +97,15 @@ jobs:
         with:
           name: osx-x64
           path: runtimes/osx-x64
-      - name: Grab Windows binary
+      - name: Grab Windows x64 binary
         uses: actions/download-artifact@master
         with:
           name: win-x64
           path: runtimes/win-x64
+      - name: Grab Windows x86 binary
+        uses: actions/download-artifact@master
+        with:
+          name: win-x86
+          path: runtimes/win-x86
       - name: Build and pack nuget package
         run: dotnet pack -c Release
