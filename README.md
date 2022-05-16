@@ -1,8 +1,6 @@
-# StbiSharp
+# StbiSharp ![](https://github.com/tom94/stbi-sharp/workflows/CI/badge.svg)
 
-![](https://github.com/tom94/stbi-sharp/workflows/CI/badge.svg)
-
-A C# wrapper around the single-header image-loading library [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h). It supports __JPEG__, __PNG__, __BMP__, __GIF__, HDR, PIC, PNM, PSD, and TGA (for some formats only a subset of features; consult [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) for details).
+A C# wrapper around the single-header image-loading libraries [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) and [qoi.h](https://github.com/phoboslab/qoi/blob/master/qoi.h). It supports __JPEG__, __PNG__, __QOI__, __BMP__, __GIF__, HDR, PIC, PNM, PSD, and TGA (for some formats only a subset of features; consult [stb_image.h](https://github.com/nothings/stb/blob/master/stb_image.h) for details).
 
 ## Usage
 
