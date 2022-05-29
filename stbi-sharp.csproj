@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;netcoreapp2.0;netstandard2.0</TargetFrameworks>
     <RootNamespace>StbiSharp</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputType>Library</OutputType>
     <Description>A wrapper around stb_image.h</Description>
     <AssemblyTitle>STBI C# wrapper</AssemblyTitle>
     <AssemblyName>StbiSharp</AssemblyName>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
   <PropertyGroup Label="Nuget">
     <IsPackable>true</IsPackable>
@@ -33,6 +33,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
   </ItemGroup>
 </Project>

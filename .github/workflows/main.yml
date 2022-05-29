@@ -11,44 +11,6 @@ on:
       - master
 
 jobs:
-  build_native_linux:
-    name: Build native on linux
-    runs-on: ubuntu-18.04
-
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          submodules: recursive
-      - name: Build
-        run: |
-          mkdir build
-          cd build
-          cmake ../libstbi
-          make install
-      - uses: actions/upload-artifact@master
-        with:
-          name: linux-x64
-          path: runtimes/linux-x64
-
-  build_native_macos:
-    name: Build native on macOS
-    runs-on: macos-latest
-
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          submodules: recursive
-      - name: Build
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9 ../libstbi
-          make install
-      - uses: actions/upload-artifact@master
-        with:
-          name: osx-x64
-          path: runtimes/osx-x64
-
   build_native_windows:
     name: Build native on Windows
     runs-on: windows-2016
@@ -65,7 +27,7 @@ jobs:
           submodules: recursive
 
       - name: Setup MSBuild.exe
-        uses: warrenbuckley/Setup-MSBuild@v1
+        uses: microsoft/setup-msbuild@v1.1
 
       - name: Build
         run: |
@@ -83,20 +45,10 @@ jobs:
   build_wrapper:
     name: Build C# wrapper
     runs-on: ubuntu-latest
-    needs: [build_native_linux, build_native_macos, build_native_windows]
+    needs: [build_native_windows]
 
     steps:
       - uses: actions/checkout@v1
-      - name: Grab linux binary
-        uses: actions/download-artifact@master
-        with:
-          name: linux-x64
-          path: runtimes/linux-x64
-      - name: Grab macOS binary
-        uses: actions/download-artifact@master
-        with:
-          name: osx-x64
-          path: runtimes/osx-x64
       - name: Grab Windows x64 binary
         uses: actions/download-artifact@master
         with:
